@@ -1,15 +1,31 @@
-name: Hello World Action
+name: Build Backend and Frontend Docker Images
 
+# Trigger the workflow on push or pull request to main branch
 on:
   push:
-    branches:
-      - main
-  workflow_dispatch:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
-  say-hello:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Print Hello World
-        run: echo "Hello World"
+      # Step 1: Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Set up Docker Buildx (optional but recommended for multi-platform builds)
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # Step 3: Build backend Docker image
+      - name: Build Backend Docker Image
+        run: |
+          docker build -t backend-image ./backend
+
+      # Step 4: Build frontend Docker image
+      - name: Build Frontend Docker Image
+        run: |
+          docker build -t frontend-image ./frontend
